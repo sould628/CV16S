@@ -1,0 +1,10 @@
+Barn
+Baseball field
+Beach
+Bookstore
+Building facade
+Forest broadleaf
+Highway
+Mountain
+
+
