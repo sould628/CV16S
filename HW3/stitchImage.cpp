@@ -571,8 +571,9 @@ void stitchImage::stitch()
 	{
 		for (int h = 0; h < 256; h++)
 		{
-			float sw = (float)w / scale;
-			float sh = (float)h / scale;
+			int src[2] = { w, h };
+			int target[2] = { 0, 0 };
+			calcTransform(src, target, homoH[0]);
 			int transW = ((homoH[1].at<float>(0, 0)*w) + (homoH[1].at<float>(0, 1)*h) + homoH[1].at<float>(0, 2)) / ((homoH[1].at<float>(2, 0)*w) + (homoH[1].at<float>(2, 1)*h) + homoH[1].at<float>(2, 2));
 			int transH = ((homoH[1].at<float>(1, 0)*w) + (homoH[1].at<float>(1, 1)*h) + homoH[1].at<float>(1, 2)) / ((homoH[1].at<float>(2, 0)*w) + (homoH[1].at<float>(2, 1)*h) + homoH[1].at<float>(2, 2));
 			if (transW < 0)
@@ -615,6 +616,12 @@ void stitchImage::stitch()
 	displayImage("stitched", stitchedImage, 1, 0);
 }
 
+//src(w,h)
+void stitchImage::calcTransform(int src[2], int (&ret)[2], cv::Mat H)
+{
+	ret[0] = ((H.at<float>(0, 0)*src[0]) + (H.at<float>(0, 1)*src[1]) + H.at<float>(0, 2)) / ((H.at<float>(2, 0)*src[0]) + (H.at<float>(2, 1)*src[1]) + H.at<float>(2, 2));
+	ret[1] = ((H.at<float>(1, 0)*src[0]) + (H.at<float>(1, 1)*src[1]) + H.at<float>(1, 2)) / ((H.at<float>(2, 0)*src[0]) + (H.at<float>(2, 1)*src[1]) + H.at<float>(2, 2));
+}
 
 void stitchImage::showSampledData(const char *windowName, cv::Mat *data, int skip, int destroy) const
 {

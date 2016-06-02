@@ -87,7 +87,6 @@ private:
 	std::vector<VlSiftKeypoint> *keyPoints;
 	vl_sift_pix** siftData;
 
-
 	std::vector<desc> *descriptors;
 	std::vector<matchPair> *matched;
 
@@ -105,6 +104,7 @@ public:
 	void match();
 	void ransac(int numSample=4);
 	void stitch();
+	void calcTransform(int src[2], int (&ret)[2], cv::Mat H);
 public:
 	void showSampledData(const char *windowName, cv::Mat *data, int skip = 0, int destroy = 0) const;
 
