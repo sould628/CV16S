@@ -72,6 +72,7 @@ struct coord {
 class stitchImage
 {
 private:
+	cv::String filename[5];
 	float scale = 255.f;
 
 	VlSiftFilt **siftFilter;
@@ -104,7 +105,7 @@ public:
 	void match();
 	void ransac(int numSample=4);
 	void stitch();
-	void calcTransform(int src[2], int (&ret)[2], cv::Mat H);
+	void calcTransform(int src[2], int (&ret)[2], cv::Mat H, bool &found, int sizeX, int sizeY);
 public:
 	void showSampledData(const char *windowName, cv::Mat *data, int skip = 0, int destroy = 0) const;
 

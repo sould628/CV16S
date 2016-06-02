@@ -1,5 +1,22 @@
-﻿빌드 시작: 2016-04-10 오전 12:22:25
-
-빌드했습니다.
-
-경과 시간: 00:00:00.01
+﻿  main.cpp
+e:\hyo\github\cv16s\hw1\include\opencv2\core\mat.hpp(1914): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\persistence.hpp : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\utility.hpp : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\utility.hpp : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+e:\hyo\github\cv16s\hw1\main.cpp(388): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\hyo\github\cv16s\hw1\main.cpp(409): warning C4101: 'cvImageHeight' :참조되지 않은 지역 변수입니다.
+e:\hyo\github\cv16s\hw1\main.cpp(409): warning C4101: 'cvImageWidth' :참조되지 않은 지역 변수입니다.
+  HW1.vcxproj -> E:\Hyo\Github\CV16S\HW1\./bin/HW1.exe
+e:\hyo\github\cv16s\hw1\include\opencv2\core\mat.inl.hpp(2330): warning C6011: NULL 포인터 'm'을(를) 역참조하고 있습니다. 이 오류가 발생할 수 있는 이전 위치는 줄 2327을(를) 참조하십시오.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\mat.inl.hpp(2344): warning C6011: NULL 포인터 'm'을(를) 역참조하고 있습니다. 이 오류가 발생할 수 있는 이전 위치는 줄 2341을(를) 참조하십시오.
+e:\hyo\github\cv16s\hw1\main.cpp(415): warning C6385: 'temp1'에서 잘못된 데이터를 읽고 있습니다.  읽기 가능한 크기는 '12*56+4'바이트인데 실제로는 '5656'바이트만 읽을 수 있습니다.
+e:\hyo\github\cv16s\hw1\main.cpp(883): warning C6385: 'convCropImage'에서 잘못된 데이터를 읽고 있습니다.  읽기 가능한 크기는 '11*56+4'바이트인데 실제로는 '5656'바이트만 읽을 수 있습니다.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\matx.hpp(1057): warning C6385: 'this->val'에서 잘못된 데이터를 읽고 있습니다.  읽기 가능한 크기는 '8'바이트인데 실제로는 'i'바이트만 읽을 수 있습니다.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\matx.hpp(1050): warning C6385: 'this->val'에서 잘못된 데이터를 읽고 있습니다.  읽기 가능한 크기는 '12'바이트인데 실제로는 'i'바이트만 읽을 수 있습니다.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\mat.inl.hpp(920): warning C6011: NULL 포인터 'data+step.p[0]*i0'을(를) 역참조하고 있습니다. 
+e:\hyo\github\cv16s\hw1\include\opencv2\core\matx.hpp(513): warning C6294: for 루프가 잘못 정의되었습니다. 초기 조건이 충족되지 않으므로 루프 본문이 실행되지 않습니다.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\matx.hpp(513): warning C6201: 스택에 할당되었을 가능성이 있는 버퍼 'this->val'에 대해 인덱스 '3'이(가) 유효한 인덱스 범위 '0' - '2'을(를) 벗어납니다.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\matx.hpp(505): warning C6294: for 루프가 잘못 정의되었습니다. 초기 조건이 충족되지 않으므로 루프 본문이 실행되지 않습니다.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\matx.hpp(505): warning C6201: 스택에 할당되었을 가능성이 있는 버퍼 'this->val'에 대해 인덱스 '2'이(가) 유효한 인덱스 범위 '0' - '1'을(를) 벗어납니다.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\matx.hpp(521): warning C6294: for 루프가 잘못 정의되었습니다. 초기 조건이 충족되지 않으므로 루프 본문이 실행되지 않습니다.
+e:\hyo\github\cv16s\hw1\include\opencv2\core\matx.hpp(521): warning C6201: 스택에 할당되었을 가능성이 있는 버퍼 'this->val'에 대해 인덱스 '4'이(가) 유효한 인덱스 범위 '0' - '3'을(를) 벗어납니다.

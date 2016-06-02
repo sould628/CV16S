@@ -20,7 +20,7 @@ stitchImage::stitchImage(const char** filename, int numData)
 		this->originalData[i] = cv::imread(filename[i], CV_LOAD_IMAGE_UNCHANGED);
 		cv::resize(originalData[i], downSampledData[i], cv::Size(256, 256), 0, 0, CV_INTER_AREA);
 		cv::cvtColor(downSampledData[i], greyData[i], CV_RGB2GRAY);
-
+		this->filename[i]=filename[i];
 	}
 
 	siftData = new vl_sift_pix*[numData];
@@ -157,7 +157,7 @@ void stitchImage::extractDesc()
 			}
 		}
 		displayImage("test", temp, 1, 0);
-
+		cv::imwrite("./result/descExtraction" + filename[ind], temp);
 	}
 
 }
@@ -258,7 +258,7 @@ void stitchImage::match() {
 
 		//change 3rd parameter 0 to skip
 		displayImage("mat3", mat3, 1, 0);
-
+		cv::imwrite("./result/putativeMatch" + filename[i], mat3);
 	}
 
 }
@@ -532,6 +532,7 @@ void stitchImage::ransac(int numSample)
 		}
 
 		displayImage("finalMatch", temp, 1, 0);
+		cv::imwrite("./result/ransacMatch" + filename[ind], temp);
 	}
 	//check
 
@@ -546,13 +547,16 @@ void stitchImage::ransac(int numSample)
 
 void stitchImage::stitch()
 {
+
+	int offsetW = 512;
+	int offsetH = 232;
 	//only for 5 images
 	if (numData != 5)
 	{
 		std::cout << "application only for 5 images\nEnding sequence\n";
 			return;
 	}
-	this->stitchedImage = cv::Mat(720, 1280, CV_8UC1);
+	this->stitchedImage = cv::Mat(720, 1280, CV_8UC3);
 
 	int flag[1280][720] = { 0 };
 	//image 3 first
@@ -560,67 +564,71 @@ void stitchImage::stitch()
 	{
 		for (int h = 0; h < 256; h++)
 		{
-			stitchedImage.at<uchar>(232 + h, 512 + w) = greyData[1].at<uchar>(h, w);
-			flag[512 + w][232 + h] = 1;
+			stitchedImage.at<cv::Vec3b>(232 + h, 512 + w) = downSampledData[2].at<cv::Vec3b>(h, w);
+			flag[offsetW + w][offsetH + h] = 1;
 		}
 	}
 
 	
 	cv::Mat homoMat = homoH[0];
-	for (int w = 0; w < 256; w++)
+	for (int w = 0; w < 1280; w++)
 	{
-		for (int h = 0; h < 256; h++)
+		for (int h = 0; h < 720; h++)
 		{
-			int src[2] = { w, h };
+			int src[2] = { w-offsetW, h-offsetH };
 			int target[2] = { 0, 0 };
-			calcTransform(src, target, homoH[0]);
-			int transW = ((homoH[1].at<float>(0, 0)*w) + (homoH[1].at<float>(0, 1)*h) + homoH[1].at<float>(0, 2)) / ((homoH[1].at<float>(2, 0)*w) + (homoH[1].at<float>(2, 1)*h) + homoH[1].at<float>(2, 2));
-			int transH = ((homoH[1].at<float>(1, 0)*w) + (homoH[1].at<float>(1, 1)*h) + homoH[1].at<float>(1, 2)) / ((homoH[1].at<float>(2, 0)*w) + (homoH[1].at<float>(2, 1)*h) + homoH[1].at<float>(2, 2));
-			if (transW < 0)
-				transW = 0;
-			if (transW >= 1280)
-				transW = 1279;
-			if (transH < 0)
-				transH = 0;
-			if (transH >= 720)
-				transH = 719;
-			stitchedImage.at<uchar>(transH, transW) = greyData[0].at<uchar>((int)(h), (int)(w));
+			for (int i = 0; i < numData - 1; i++)
+			{
+				bool found = false;
+				cv::Mat H;
+				if (i < 2)
+				{
+					if (i == 0)
+					{
+						H = (homoH[0] * homoH[1]).inv();
+					}
+					else
+						H = homoH[i].inv();
+				}
+				else
+				{
+					if(i==2)
+						H = homoH[i];
+					else
+					{
+						H = homoH[3] * homoH[2];
+					}
+				}
+				calcTransform(src, target, H, found, 256, 256);
+
+				if (found)
+				{
+					if(i<2)
+						stitchedImage.at<cv::Vec3b>(h, w) = downSampledData[i].at<cv::Vec3b>(target[1], target[0]);
+					else
+						stitchedImage.at<cv::Vec3b>(h, w) = downSampledData[i+1].at<cv::Vec3b>(target[1], target[0]);
+				}
+			}
 		}
 	}
 
-	//image 1
-	for (int w = 0; w < 256; w++)
-	{
-		for (int h = 0; h < 256; h++)
-		{
-			cv::Mat homoMat = homoH[0].inv()*homoH[1].inv();
-		}
-	}
-	//image 4
-	for (int w = 0; w < 256; w++)
-	{
-		for (int h = 0; h < 256; h++)
-		{
-
-		}
-	}
-	//image 5
-	for (int w = 0; w < 256; w++)
-	{
-		for (int h = 0; h < 256; h++)
-		{
-
-		}
-	}
 
 	displayImage("stitched", stitchedImage, 1, 0);
+	cv::imwrite("./result/stitchedImage", stitchedImage);
 }
 
 //src(w,h)
-void stitchImage::calcTransform(int src[2], int (&ret)[2], cv::Mat H)
+void stitchImage::calcTransform(int src[2], int (&ret)[2], cv::Mat H, bool &found, int sizeX, int sizeY)
 {
 	ret[0] = ((H.at<float>(0, 0)*src[0]) + (H.at<float>(0, 1)*src[1]) + H.at<float>(0, 2)) / ((H.at<float>(2, 0)*src[0]) + (H.at<float>(2, 1)*src[1]) + H.at<float>(2, 2));
 	ret[1] = ((H.at<float>(1, 0)*src[0]) + (H.at<float>(1, 1)*src[1]) + H.at<float>(1, 2)) / ((H.at<float>(2, 0)*src[0]) + (H.at<float>(2, 1)*src[1]) + H.at<float>(2, 2));
+	if ((ret[0] >= 0) && (ret[0] < sizeX))
+		if ((ret[1] >= 0) && (ret[1] < sizeY))
+			found = true;
+		else
+			found = false;
+	else
+		found = false;
 }
 
 void stitchImage::showSampledData(const char *windowName, cv::Mat *data, int skip, int destroy) const
